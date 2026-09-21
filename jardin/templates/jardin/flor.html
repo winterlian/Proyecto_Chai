@@ -1,0 +1,537 @@
+```html
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Mis flores 🌼</title>
+
+
+    <style>
+
+        body {
+            margin: 0;
+            background: #000000;
+
+            min-height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            overflow: hidden;
+        }
+
+
+        canvas {
+            width: min(800px, 90vw);
+            height: min(800px, 90vw);
+
+            max-width: 90vw;
+            max-height: 80vh;
+
+            display: block;
+        }
+
+
+        /* ==========================================
+           BOTÓN REGRESAR
+           ========================================== */
+
+        .boton-regresar {
+
+            position: fixed;
+
+            bottom: 20px;
+            left: 50%;
+
+            transform: translateX(-50%);
+
+            padding: 12px 24px;
+
+            background: #333333;
+            color: #777777;
+
+            text-decoration: none;
+
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+
+            border-radius: 25px;
+
+            pointer-events: none;
+            cursor: default;
+
+            transition:
+                background 0.5s,
+                color 0.5s,
+                box-shadow 0.5s,
+                transform 0.3s;
+
+            white-space: nowrap;
+        }
+
+
+        /* ==========================================
+           BOTÓN DESBLOQUEADO
+           ========================================== */
+
+        .boton-regresar.activo {
+
+            background: #f4c542;
+            color: #000000;
+
+            pointer-events: auto;
+            cursor: pointer;
+
+            box-shadow:
+                0 0 10px #f4c542,
+                0 0 20px #f4c542,
+                0 0 35px #ffe680;
+
+            animation:
+                brillo 1.5s infinite alternate;
+        }
+
+
+        /* ==========================================
+           EFECTO DE BRILLO
+           ========================================== */
+
+        @keyframes brillo {
+
+            from {
+
+                box-shadow:
+                    0 0 8px #f4c542,
+                    0 0 15px #f4c542;
+            }
+
+            to {
+
+                box-shadow:
+                    0 0 15px #f4c542,
+                    0 0 30px #f4c542,
+                    0 0 45px #ffe680;
+            }
+        }
+
+
+        /* ==========================================
+           EFECTO AL TOCAR / PASAR EL MOUSE
+           ========================================== */
+
+        .boton-regresar.activo:hover {
+
+            background: #ffe680;
+
+            transform:
+                translateX(-50%)
+                scale(1.05);
+        }
+
+
+        /* ==========================================
+           CONFIGURACIÓN PARA TELÉFONOS
+           ========================================== */
+
+        @media (max-width: 600px) {
+
+            body {
+                align-items: center;
+            }
+
+
+            canvas {
+
+                width: 90vw;
+                height: 90vw;
+
+                max-width: 90vw;
+                max-height: 70vh;
+            }
+
+
+            .boton-regresar {
+
+                bottom: 15px;
+
+                padding: 11px 22px;
+
+                font-size: 15px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- ==========================================
+         FLOR
+         ========================================== -->
+
+    <canvas
+        id="flowerCanvas"
+        width="800"
+        height="800">
+    </canvas>
+
+
+    <!-- ==========================================
+         BOTÓN REGRESAR
+         ========================================== -->
+
+    <a
+        href="{% url 'inicio' %}"
+        class="boton-regresar"
+        id="botonRegresar">
+
+        🔒 Regresar
+
+    </a>
+
+
+    <script>
+
+        const canvas =
+            document.getElementById("flowerCanvas");
+
+        const ctx =
+            canvas.getContext("2d");
+
+
+        // ==========================================
+        // BOTÓN
+        // ==========================================
+
+        const botonRegresar =
+            document.getElementById(
+                "botonRegresar"
+            );
+
+
+        // ==========================================
+        // CARGAR EL JSON
+        // ==========================================
+
+        fetch(
+            "{% static 'jardin/sunflowers.json' %}"
+        )
+
+        .then(response => response.json())
+
+        .then(regions => {
+
+
+            console.log(
+                "JSON cargado:",
+                regions
+            );
+
+
+            console.log(
+                "TOTAL DE REGIONES:",
+                regions.length
+            );
+
+
+            console.log(
+                "TOTAL DE PUNTOS:",
+                regions.reduce(
+                    (total, region) =>
+                        total + region.contour.length,
+                    0
+                )
+            );
+
+
+            // ==========================================
+            // OBTENER TODOS LOS PUNTOS
+            // ==========================================
+
+            const allPoints = [];
+
+
+            regions.forEach(region => {
+
+                region.contour.forEach(point => {
+
+                    allPoints.push([
+                        point[0],
+                        point[1]
+                    ]);
+
+                });
+
+            });
+
+
+            // ==========================================
+            // CALCULAR LÍMITES
+            // ==========================================
+
+            const minX = Math.min(
+                ...allPoints.map(
+                    point => point[0]
+                )
+            );
+
+
+            const maxX = Math.max(
+                ...allPoints.map(
+                    point => point[0]
+                )
+            );
+
+
+            const minY = Math.min(
+                ...allPoints.map(
+                    point => point[1]
+                )
+            );
+
+
+            const maxY = Math.max(
+                ...allPoints.map(
+                    point => point[1]
+                )
+            );
+
+
+            // ==========================================
+            // MISMA ESCALA QUE TURTLE
+            // ==========================================
+
+            const width =
+                maxX - minX;
+
+            const height =
+                maxY - minY;
+
+
+            const scale =
+                Math.min(
+                    600 / width,
+                    600 / height
+                );
+
+
+            // ==========================================
+            // MISMO CENTRO QUE TURTLE
+            // ==========================================
+
+            const centerX =
+                (minX + maxX) / 2;
+
+            const centerY =
+                (minY + maxY) / 2;
+
+
+            // ==========================================
+            // CONVERTIR COORDENADAS
+            // ==========================================
+
+            function convertPoint(point) {
+
+                const x =
+                    (point[0] - centerX)
+                    * scale
+                    + canvas.width / 2;
+
+
+                const y =
+                    (centerY - point[1])
+                    * scale
+                    + canvas.height / 2;
+
+
+                return [x, y];
+
+            }
+
+
+            // ==========================================
+            // DIBUJAR UNA REGIÓN
+            // ==========================================
+
+            function drawRegion(region) {
+
+                const points =
+                    region.contour;
+
+
+                console.log(
+                    "Región:",
+                    currentRegion,
+                    "Puntos:",
+                    region.contour.length,
+                    "Color:",
+                    region.color
+                );
+
+
+                // Color original del JSON
+
+                const color =
+                    `rgb(
+                        ${region.color[0]},
+                        ${region.color[1]},
+                        ${region.color[2]}
+                    )`;
+
+
+                ctx.fillStyle = color;
+
+
+                // Comenzar figura
+
+                ctx.beginPath();
+
+
+                // Primer punto
+
+                const first =
+                    convertPoint(points[0]);
+
+
+                ctx.moveTo(
+                    first[0],
+                    first[1]
+                );
+
+
+                // Resto de puntos
+
+                for (
+                    let i = 1;
+                    i < points.length;
+                    i++
+                ) {
+
+                    const point =
+                        convertPoint(
+                            points[i]
+                        );
+
+
+                    ctx.lineTo(
+                        point[0],
+                        point[1]
+                    );
+
+                }
+
+
+                // Cerrar figura
+
+                ctx.closePath();
+
+
+                // Rellenar
+
+                ctx.fill();
+
+            }
+
+
+            // ==========================================
+            // ANIMACIÓN
+            // ==========================================
+
+            let currentRegion = 0;
+
+
+            function animate() {
+
+
+                // ======================================
+                // SI TERMINÓ LA ANIMACIÓN
+                // ======================================
+
+                if (
+                    currentRegion >=
+                    regions.length
+                ) {
+
+                    // Desbloquear botón
+
+                    botonRegresar.classList.add(
+                        "activo"
+                    );
+
+
+                    // Cambiar texto
+
+                    botonRegresar.innerHTML =
+                        "💛 Regresar";
+
+
+                    return;
+
+                }
+
+
+                // ======================================
+                // DIBUJAR REGIÓN
+                // ======================================
+
+                drawRegion(
+                    regions[currentRegion]
+                );
+
+
+                currentRegion++;
+
+
+                // ======================================
+                // ESPERAR ANTES DE LA SIGUIENTE
+                // ======================================
+
+                setTimeout(
+                    animate,
+                    800
+                );
+
+            }
+
+
+            // ==========================================
+            // INICIAR ANIMACIÓN
+            // ==========================================
+
+            animate();
+
+        })
+
+
+        // ==========================================
+        // ERROR
+        // ==========================================
+
+        .catch(error => {
+
+            console.error(
+                "Error al cargar las flores:",
+                error
+            );
+
+        });
+
+    </script>
+
+
+</body>
+
+</html>

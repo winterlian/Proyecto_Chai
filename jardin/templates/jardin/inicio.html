@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Para Miguel ♡</title>
+
+    <style>
+        :root {
+            --crema: #f8f0e6;
+            --papel: #fffaf3;
+            --morado: #6d4a7d;
+            --morado-oscuro: #493454;
+            --lavanda: #c8afd3;
+            --azul: #263d59;
+            --azul-claro: #526b85;
+            --rosa: #d9899c;
+            --texto: #403942;
+            --sombra: 0 25px 70px rgba(55, 38, 58, 0.22);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Georgia, "Times New Roman", serif;
+            background: var(--crema);
+            color: var(--texto);
+            overflow-x: hidden;
+        }
+
+        /* =========================
+           PORTADA
+        ========================= */
+
+        .cover {
+            min-height: 100vh;
+            width: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+
+            background:
+                radial-gradient(
+                    circle at 50% 45%,
+                    #fffaf5 0%,
+                    #f8f0e6 45%,
+                    #eadde7 100%
+                );
+
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .cover.hidden {
+            opacity: 0;
+            transform: scale(1.03);
+            pointer-events: none;
+        }
+
+        .cover-content {
+            text-align: center;
+            position: relative;
+            z-index: 5;
+            padding: 30px;
+        }
+
+        .small-title {
+            color: var(--morado);
+            font-size: 17px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+
+        .for-text {
+            color: var(--azul);
+            font-size: 20px;
+            letter-spacing: 5px;
+            margin-bottom: 5px;
+        }
+
+        .name {
+            color: var(--morado-oscuro);
+            font-size: clamp(60px, 13vw, 145px);
+            line-height: 0.9;
+            letter-spacing: 8px;
+            font-weight: normal;
+            margin-bottom: 35px;
+        }
+
+        /* Botón de portada */
+
+        .accept-btn {
+            border: none;
+            padding: 16px 30px;
+            border-radius: 30px;
+
+            background: var(--morado);
+            color: white;
+
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 17px;
+
+            cursor: pointer;
+
+            box-shadow: 0 10px 25px rgba(55, 38, 58, 0.20);
+
+            transition:
+                transform 0.2s ease,
+                background 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .accept-btn:hover {
+            transform: translateY(-3px);
+            background: var(--morado-oscuro);
+            box-shadow: 0 14px 30px rgba(55, 38, 58, 0.25);
+        }
+
+        .hint {
+            margin-top: 15px;
+            font-size: 13px;
+            color: var(--azul-claro);
+            opacity: 0.8;
+        }
+
+        /* =========================
+           DECORACIÓN PORTADA
+        ========================= */
+
+        .shape {
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .shape.one {
+            width: 280px;
+            height: 280px;
+            background: var(--lavanda);
+            border-radius: 50%;
+            left: -100px;
+            top: -80px;
+            opacity: 0.45;
+        }
+
+        .shape.two {
+            width: 220px;
+            height: 330px;
+            background: var(--morado);
+            border-radius: 50%;
+            right: -100px;
+            bottom: -130px;
+            transform: rotate(25deg);
+            opacity: 0.22;
+        }
+
+        .shape.three {
+            width: 160px;
+            height: 160px;
+            background: var(--rosa);
+            border-radius: 50%;
+            right: 10%;
+            top: 10%;
+            opacity: 0.18;
+        }
+
+        .shape.four {
+            width: 130px;
+            height: 200px;
+            background: var(--azul-claro);
+            border-radius: 50%;
+            left: 8%;
+            bottom: 10%;
+            transform: rotate(-30deg);
+            opacity: 0.14;
+        }
+
+        .line {
+            position: absolute;
+            border: 2px solid var(--azul);
+            border-radius: 50%;
+            opacity: 0.16;
+            pointer-events: none;
+        }
+
+        .line.one {
+            width: 450px;
+            height: 180px;
+            transform: rotate(-20deg);
+            left: -100px;
+            bottom: 20%;
+        }
+
+        .line.two {
+            width: 400px;
+            height: 150px;
+            transform: rotate(20deg);
+            right: -80px;
+            top: 20%;
+        }
+
+        /* =========================
+           CORAZONES FLOTANTES
+        ========================= */
+
+        .floating-heart {
+            position: fixed;
+            z-index: 100;
+            pointer-events: none;
+            animation: floatHeart 3.5s ease-out forwards;
+        }
+
+        @keyframes floatHeart {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.5);
+            }
+
+            15% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-180px) scale(1.2) rotate(15deg);
+            }
+        }
+
+        /* =========================
+           CARTA
+        ========================= */
+
+        .letter-page {
+            display: none;
+            min-height: 100vh;
+            padding: 70px 20px;
+
+            background:
+                radial-gradient(
+                    circle at 20% 20%,
+                    rgba(200, 175, 211, 0.25),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 80% 80%,
+                    rgba(217, 137, 156, 0.15),
+                    transparent 30%
+                ),
+                var(--crema);
+        }
+
+        .letter-page.show {
+            display: block;
+        }
+
+        .paper {
+            position: relative;
+            max-width: 850px;
+            margin: 0 auto;
+
+            padding: 65px 75px;
+
+            background: var(--papel);
+
+            border: 1px solid rgba(109, 74, 125, 0.20);
+
+            box-shadow: var(--sombra);
+
+            min-height: 900px;
+        }
+
+        .paper::before {
+            content: "";
+            position: absolute;
+            inset: 14px;
+
+            border: 1px solid rgba(109, 74, 125, 0.16);
+
+            pointer-events: none;
+        }
+
+        /* =========================
+           ENCABEZADO DE LA CARTA
+        ========================= */
+
+        .letter-header {
+            text-align: center;
+            margin-bottom: 45px;
+        }
+
+        .letter-header .small {
+            color: var(--azul-claro);
+            font-size: 14px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .letter-header h1 {
+            color: var(--morado-oscuro);
+            font-size: 42px;
+            font-weight: normal;
+            margin-bottom: 8px;
+        }
+
+        .letter-header .heart {
+            color: var(--rosa);
+            font-size: 24px;
+        }
+
+        /* =========================
+           CONTENIDO CARTA
+        ========================= */
+
+        .letter-body {
+            position: relative;
+            z-index: 2;
+
+            font-size: 18px;
+            line-height: 1.9;
+        }
+
+        .letter-body p {
+            margin-bottom: 25px;
+        }
+
+        .greeting {
+            color: var(--morado);
+            font-size: 23px;
+            margin-bottom: 30px !important;
+        }
+
+        .signature {
+            text-align: right;
+            color: var(--morado);
+            font-style: italic;
+            font-size: 20px;
+            margin-top: 50px;
+        }
+
+        /* =========================
+           FOTO
+        ========================= */
+
+        .photo-box {
+            margin: 40px auto;
+            max-width: 550px;
+            text-align: center;
+        }
+
+        .photo-box img {
+            display: block;
+            width: 100%;
+            height: 360px;
+            object-fit: cover;
+
+            border: 8px solid white;
+
+            box-shadow: 0 10px 30px rgba(55, 38, 58, 0.18);
+        }
+
+        .photo-caption {
+            margin-top: 12px;
+            color: var(--azul-claro);
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        /* =========================
+           BOTÓN FLORES
+        ========================= */
+
+        .flowers-button-container {
+            text-align: center;
+            margin-top: 50px;
+            padding-bottom: 20px;
+        }
+
+        .flowers-btn {
+            border: none;
+
+            padding: 15px 30px;
+
+            border-radius: 30px;
+
+            background: var(--morado);
+            color: white;
+
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 17px;
+
+            cursor: pointer;
+
+            box-shadow: 0 10px 25px rgba(55, 38, 58, 0.18);
+
+            transition:
+                transform 0.2s ease,
+                background 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .flowers-btn:hover {
+            transform: translateY(-3px);
+            background: var(--morado-oscuro);
+            box-shadow: 0 14px 30px rgba(55, 38, 58, 0.25);
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            text-align: center;
+            margin-top: 45px;
+
+            color: var(--azul-claro);
+
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 600px) {
+
+            .small-title {
+                font-size: 13px;
+                letter-spacing: 3px;
+            }
+
+            .for-text {
+                font-size: 16px;
+                letter-spacing: 4px;
+            }
+
+            .name {
+                font-size: 65px;
+                letter-spacing: 5px;
+            }
+
+            .shape.one {
+                width: 180px;
+                height: 180px;
+                left: -80px;
+                top: -50px;
+            }
+
+            .shape.two {
+                width: 150px;
+                height: 220px;
+            }
+
+            .shape.three {
+                width: 100px;
+                height: 100px;
+            }
+
+            .shape.four {
+                width: 90px;
+                height: 140px;
+            }
+
+            .line.one {
+                width: 280px;
+                height: 110px;
+                left: -100px;
+            }
+
+            .line.two {
+                width: 250px;
+                height: 100px;
+                right: -100px;
+            }
+
+            .letter-page {
+                padding: 30px 12px;
+            }
+
+            .paper {
+                padding: 50px 28px;
+            }
+
+            .paper::before {
+                inset: 9px;
+            }
+
+            .letter-header h1 {
+                font-size: 32px;
+            }
+
+            .letter-body {
+                font-size: 16px;
+                line-height: 1.8;
+            }
+
+            .photo-box img {
+                height: 250px;
+            }
+
+            .flowers-btn {
+                font-size: 15px;
+                padding: 13px 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =====================================
+         PORTADA
+    ====================================== -->
+
+    <section class="cover" id="cover">
+
+        <!-- Decoraciones -->
+        <div class="shape one"></div>
+        <div class="shape two"></div>
+        <div class="shape three"></div>
+        <div class="shape four"></div>
+
+        <div class="line one"></div>
+        <div class="line two"></div>
+
+        <!-- Contenido -->
+        <div class="cover-content">
+
+            <p class="small-title">
+                Una pequeña carta
+            </p>
+
+            <p class="for-text">
+                PARA:
+            </p>
+
+            <h1 class="name">
+                MIGUEL
+            </h1>
+
+            <button class="accept-btn" id="acceptBtn">
+                Aceptar carta UwU ♡
+            </button>
+
+            <p class="hint">
+                Haz clic para abrirla
+            </p>
+
+        </div>
+    </section>
+
+
+    <!-- =====================================
+         CARTA
+    ====================================== -->
+
+    <section class="letter-page" id="letterPage">
+
+        <div class="paper">
+
+            <!-- Encabezado -->
+
+            <header class="letter-header">
+
+                <p class="small">
+                    Para ti, Miguel
+                </p>
+
+                <h1>
+                    Mi carta
+                </h1>
+
+                <div class="heart">
+                    ♡
+                </div>
+
+            </header>
+
+
+            <!-- Contenido -->
+
+            <div class="letter-body">
+
+                <p class="greeting">
+                    Vida,
+                </p>
+
+                <p>
+                    No sé muy bien cómo empezar esta carta, 
+                    porque siento que hay demasiadas cosas que quisiera decirte y, 
+                    al mismo tiempo, ninguna palabra parece suficiente.
+                </p>
+
+                <p>
+                    Te amo Migue. Y aunque ahora mismo las cosas no estén bien, 
+                    eso no me impide seguir intentandolo.
+                </p>
+
+
+                <p>
+                    Me hace feliz tenerte a mi lado, nuestras conversaciones, 
+                    nuestros momentos que compartimos.
+                    
+                    No quiero que esta carta sea una promesa de que todo será perfecto. 
+                    Solo quiero que sepas que te quiero, y que todavía 
+                    deseo seguir compartiendo muchas cosas contigo.
+                </p>
+
+                <p>
+                    Ojalá podamos volver a encontrarnos en medio de todo esto y volver 
+                    a ser un nosotros...
+                    
+                    Esta página es solamente el comienzo. Después de
+                    esta carta todavía te espera algo más...
+                </p>
+
+
+                <!-- FIRMA -->
+
+                <p class="signature">
+                    Con todo mi cariño<br>
+                    Carolina ♡
+                </p>
+
+
+                <!-- BOTÓN A LAS FLORES -->
+
+                <div class="flowers-button-container">
+
+                    <a
+                    href="{% url 'flor' %}"
+                    class="flowers-btn"
+    >
+                    Ir a mis flores 🌼
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- FOOTER -->
+
+            <footer>
+                Hecho especialmente para ti · ♡
+            </footer>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================
+         JAVASCRIPT
+    ====================================== -->
+
+    <script>
+
+        const acceptBtn = document.getElementById("acceptBtn");
+        const cover = document.getElementById("cover");
+        const letterPage = document.getElementById("letterPage");
+
+
+        /* =========================
+           CORAZONES
+        ========================= */
+
+        function createHearts(amount = 18) {
+
+            const symbols = [
+                "♡",
+                "♥",
+                "✦",
+                "♡"
+            ];
+
+            for (let i = 0; i < amount; i++) {
+
+                const heart = document.createElement("div");
+
+                heart.className = "floating-heart";
+
+                heart.textContent =
+                    symbols[Math.floor(Math.random() * symbols.length)];
+
+                heart.style.left =
+                    Math.random() * 100 + "vw";
+
+                heart.style.top =
+                    60 + Math.random() * 35 + "vh";
+
+                heart.style.fontSize =
+                    14 + Math.random() * 20 + "px";
+
+                heart.style.color =
+                    Math.random() > 0.5
+                        ? "var(--morado)"
+                        : "var(--rosa)";
+
+                heart.style.animationDelay =
+                    Math.random() * 0.8 + "s";
+
+                document.body.appendChild(heart);
+
+
+                setTimeout(() => {
+                    heart.remove();
+                }, 4000);
+            }
+        }
+
+
+        /* =========================
+           ABRIR CARTA
+        ========================= */
+
+        acceptBtn.addEventListener("click", () => {
+
+            createHearts(18);
+
+            cover.classList.add("hidden");
+
+            setTimeout(() => {
+
+                cover.style.display = "none";
+
+                letterPage.classList.add("show");
+
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
+
+            }, 500);
+
+        });
+
+        /* =========================
+           CORAZONES AL PASAR
+           POR LA CARTA
+        ========================= */
+
+        let heartInterval;
+
+        letterPage.addEventListener("mouseenter", () => {
+
+            heartInterval = setInterval(() => {
+                createHearts(1);
+            }, 900);
+
+        });
+
+
+        letterPage.addEventListener("mouseleave", () => {
+
+            clearInterval(heartInterval);
+
+        });
+
+    </script>
+
+</body>
+</html>
